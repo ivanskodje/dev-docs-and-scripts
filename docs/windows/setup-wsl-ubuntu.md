@@ -16,8 +16,8 @@ wsl --update
 ### Install VcXsrv X Server
 
 - [VcXsrv Windows X Server](https://sourceforge.net/projects/vcxsrv/): Needed for running Ubuntu GUI apps
+- Add xlaunch.exe to Firewall: Inbound Rules -> New Rule -> Program ->  Find and select xlaunch.exe -> Allow connection -> Apply to all rules.
 - Run the xlaunch.exe and make sure to select "Disable access control" (note that anyone in your network would be able to run GUI on your X Server)
-
 ### Setup DISPLAY
 
 > [source](https://stackoverflow.com/questions/61860208/wsl-2-run-graphical-linux-desktop-applications-from-windows-10-bash-shell-erro)
