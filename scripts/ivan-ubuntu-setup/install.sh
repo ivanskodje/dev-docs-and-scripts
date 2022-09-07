@@ -82,7 +82,7 @@ cat >> ~/.bashrc << EOF
 
 # IntelliJ
 function idea() {
-    /snap/bin/intellij-idea-ultimate "$1" > /dev/null 2>&1 &
+    /snap/bin/intellij-idea-ultimate "\$1" > /dev/null 2>&1 &
 }
 
 # git
