@@ -94,6 +94,12 @@ alias gitchb='git checkout -b'
 # Visual Studio Code
 alias code-python='code --extensions-dir ~/vscode_profiles/code-python/exts --user-data-dir ~/vscode_profiles/code-python/data'
 alias code-react='code --extensions-dir ~/vscode_profiles/code-react/exts --user-data-dir ~/vscode_profiles/code-react/data'
+
+# Google Chrome (chrome <URL> : open URL detached)
+function chrome() {
+        google-chrome "\$1" < /dev/null > /dev/null 2>&1 & disown
+}
+
 EOF
 source ~/.bashrc
 
