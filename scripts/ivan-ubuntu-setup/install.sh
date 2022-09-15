@@ -25,6 +25,14 @@ sudo snap install postman
 sudo snap install code --classic
 sudo snap install intellij-idea-ultimate --classic
 
+### Python Dev Scripts for Automation and whatnot
+sudo apt install python3-pip -y
+pip install python-dotenv
+pip install oracledb --upgrade
+pip install Pygments
+pip install pandas
+pip install pandasgui
+
 ### Java 17
 sudo add-apt-repository -y ppa:openjdk-r/ppa
 sudo apt update

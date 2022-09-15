@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+
+# Requirements:
+# 
+# sudo apt install python3-pip -y
+# pip install python-dotenv
+# pip install oracledb --upgrade
+# pip install Pygments
+# pip install pandas
+# pip install pandasgui
+
+# Oracle DB Examples: https://github.com/oracle/python-oracledb/tree/main/samples/tutorial
+
+import json
+import os
+from sys import argv
+from dotenv import find_dotenv, load_dotenv
+import oracledb
+from pygments import highlight, lexers, formatters
+import pandas
+from pandasgui import show
+from IPython.display import display
+
+load_dotenv(find_dotenv())
+
+if(len(argv) <= 2 or len(argv) > 5):
+    print("Invalid command, expected: sql <env> <sql-query> (<page>|gui) (gui|<page>)")
+    exit()
+
+# Get database info from environment variables
+env = str(argv[1])
+if("env1" == env.lower()):
+    user = os.environ.get("ENV1_USERNAME")
+    password = os.environ.get("ENV1_PASSWORD")
+    dsn = os.environ.get("ENV1_DSN")
+elif("env2" == env.lower()):
+    user = os.environ.get("ENV2_USERNAME")
+    password = os.environ.get("ENV2_PASSWORD")
+    dsn = os.environ.get("ENV2_DSN")
+elif("local" == env.lower()):
+    user = os.environ.get("LOCAL_USERNAME")
+    password = os.environ.get("LOCAL_PASSWORD")
+    dsn = os.environ.get("LOCAL_DSN")
+else:
+    print("Invalid environment. Make sure you add the appropriate environments before running this script!")
+    exit()
+
+
+# Get Arguments from commandline
+## Default
+page = 0
+number_of_rows = 5
+show_gui = False
+
+
+def print_json(data, columns):    
+    all_rows = []
+    for row in data:
+        row_dict = {}
+        for i in range(len(row)):
+            column_name = columns[i]
+            column_value = row[i]
+            row_dict[column_name] = column_value
+        all_rows.append(row_dict)
+    
+    row_json = json.dumps(all_rows, indent=2, default=str, sort_keys=False)
+    colorful_row = highlight(row_json, lexers.JsonLexer(),
+                            formatters.TerminalFormatter())
+    print(colorful_row)
+
+## Has gui and page
+if(len(argv) == 5):
+    try:
+        page = int(argv[4]) - 1
+        show_gui = str(argv[3]).lower() == "gui"
+    except:
+        try:
+            page = int(argv[3]) - 1
+            show_gui = str(argv[4]).lower() == "gui"
+        except:
+            print("Invalid command, expected: sql <env> <sql-query> <page> gui")
+            exit()
+
+# Has gui OR page
+if(len(argv) == 4):
+    try:
+        page = int(argv[3]) - 1
+    except:
+        page = 0
+        show_gui = str(argv[3]).lower() == "gui"
+
+
+if(len(argv) > 5):
+    print("Invalid command, expected: sql <env> <sql-query> <page> gui")
+    exit()
+
+if(show_gui):
+    number_of_rows = 25
+
+data = {}
+columns = []
+with oracledb.connect(user=user,
+    password=password,
+    dsn=dsn) as connection:
+    with connection.cursor() as cursor:        
+        # Perform Query
+        sql_query = f"{argv[2]} OFFSET {(5 * int(page))} ROWS FETCH NEXT {number_of_rows} ROWS ONLY"
+        cursor.execute(sql_query)
+
+        data = cursor.fetchall()
+        columns = [x[0] for x in cursor.description]
+        if(len(data) == 0):
+            print("No matching results")
+            exit()
+
+
+dataframe = pandas.DataFrame(data)
+dataframe.columns = columns
+if(len(argv) >= 5):
+    if(str(argv[4]).lower() == "gui"):
+        show(dataframe)
+    else:
+        print_json(data, columns)
+        # display(dataframe)
+elif(show_gui):
+    show(dataframe)
+else:
+    print_json(data, columns)
+    # display(dataframe)
