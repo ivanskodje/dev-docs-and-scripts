@@ -25,13 +25,17 @@ sudo snap install postman
 sudo snap install code --classic
 sudo snap install intellij-idea-ultimate --classic
 
+sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash # node version manager
+curl -s "https://get.sdkman.io" | bash # https://sdkman.io/install
+
 ### Python Dev Scripts for Automation and whatnot
-sudo apt install python3-pip -y
+sudo apt install python3-dev python3-pip python3-setuptools -y
 pip install python-dotenv
 pip install oracledb --upgrade
 pip install Pygments
 pip install pandas
 pip install pandasgui
+pip install thefuck --user # https://github.com/nvbn/thefuck
 
 ### Java 17
 sudo add-apt-repository -y ppa:openjdk-r/ppa
@@ -48,6 +52,7 @@ sudo snap install audacious # Music player
 sudo add-apt-repository ppa:unit193/encryption
 sudo apt update
 sudo apt install veracrypt -y
+
 
 
 
